@@ -1,0 +1,71 @@
+{{#each productos}}
+<div class="col">
+  <div class="card" style="width: 12rem;">
+    <img src="public/{{this.articulo}}.png" class="card-img-top" alt="{{this.articulo}}">
+    <div class="card-body">
+      <h5 class="card-title">{{this.articulo}}</h5>
+      <h5 class="card-title"> Medida: {{this.medida}}</h5>
+      <h5 class="card-title"> Cantidad: {{this.cantidad}}</h5>
+      <h5 class="card-title"> Precio: ${{this.precio}}</h5>
+      <button class ="btn btn-info text-white" onclick="agregarProducto('{{this.articulo}}', event)">Agregar </button>
+    </div>
+  </div>
+</div>
+{{/each}}
+
+<button type="button" class="btn btn-warning mx-auto btn-block" onclick="verSeleccion()">Mostrar selección</button>
+<!-- Modal -->
+<div class="modal fade" id="elegidoModal" tabindex="-1" aria-labelledby="elegidoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="elegidoModalLabel">Detalles del producto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" onclick="borrar()">Borrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let elegidos = [];
+
+  function agregarProducto(nombre, event) {
+    if (!elegidos.includes(nombre)) {
+      elegidos.push(nombre);
+      event.target.classList.add('btn-secondary');
+      event.target.classList.remove('btn-info');
+    } else {
+      const index = elegidos.indexOf(nombre);
+      elegidos.splice(index, 1);
+      event.target.classList.remove('btn-secondary');
+      event.target.classList.add('btn-info');
+    }
+  }
+
+  function verSeleccion() {
+    const modalBody = document.getElementById('modalBody');
+    modalBody.innerHTML = elegidos.map(nombre =>
+      `<img src="/public/${nombre}.png" alt="${nombre}" style="max-width:100%; height:auto;">`
+    ).join('');
+    $('#elegidoModal').modal('show');
+  }
+
+  function borrar() {
+    elegidos = [];
+    document.querySelectorAll('.btn-secondary').forEach(button => {
+      button.classList.remove('btn-secondary');
+      button.classList.add('btn-info');  
+    });
+    $('#elegidoModal').modal('hide');
+  }
+</script>
